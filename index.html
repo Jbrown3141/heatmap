@@ -33,6 +33,7 @@
             flex: 15%;
             width: 100%;
             display: flex;
+            min-width: 0px;
             padding: 10px;
             justify-content: center;
             align-items: center;
@@ -48,6 +49,9 @@
             cursor: pointer;
         }
 
+        #file-upload-container button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 
@@ -78,13 +82,26 @@
             'Augusta': [44.3106, -69.7795],
             'Bangor': [44.8012, -68.7778],
             'Skowhegan': [44.7833, -69.7275],
-            'Camden': [44.2087, -69.0651]
+            'Camden': [44.2087, -69.0651],
+            'Millinocket': [45.653236,-68.714550],
+            'PresqueIsle': [46.676628, -68.012692]
         };
 
-        function generateGpsData(cityCoords, numPoints = 100, spread = 0.4) {
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+
+        function getRandomFloat(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        // function generateGpsData(cityCoords, numPoints, spread) {
+        function generateGpsData(cityCoords) {
+            numPoints = getRandomInt(10,100)
             const [lat, lon] = cityCoords;
             const gpsData = [];
             for (let i = 0; i < numPoints; i++) {
+                spread = getRandomFloat(0.0, 0.4)
                 const latOffset = (Math.random() * 2 * spread) - spread;
                 const lonOffset = (Math.random() * 2 * spread) - spread;
                 gpsData.push([lat + latOffset, lon + lonOffset]);
@@ -96,7 +113,7 @@
             gpsData = [];
             for (const city in cities) {
                 const coords = cities[city];
-                const data = generateGpsData(coords);
+                const data = generateGpsData(coords, getRandomInt(40, 140), getRandomFloat(0.0, 0.4));
                 gpsData = gpsData.concat(data);
             }
 
@@ -109,9 +126,6 @@
             heatLayer = L.heatLayer(coordinates, { radius: 15, blur: 30, maxZoom: 10 }).addTo(map);
         });
 
-
-
-        
 
         document.getElementById('file-upload').addEventListener('change', function (event) {
             var file = event.target.files[0];
