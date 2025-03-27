@@ -24,6 +24,8 @@
             width: 100vw;
             height: calc(100vh - 100px);
         }
+
+        /* Wrapper to center the input button */
         #file-upload-wrapper {
             display: flex;
             justify-content: center;
@@ -32,7 +34,7 @@
             padding: 10px;
             padding-top: 40px;
             padding-bottom: 40px;
-            background-color: #e9d38ca1;
+            background-color: #e9d38cbd;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
@@ -45,11 +47,18 @@
             display: inline-block;
             text-align: center;
             border: none;
+            /* Removes default border from the input button */
             background-color: transparent;
+            /* Keeps it transparent */
             color: black;
+            /* Set text color */
             text-overflow: ellipsis;
+            /* Adds ellipsis for long filenames */
             white-space: nowrap;
+            /* Prevents text from wrapping */
         }
+
+        /* Optional: Make file input button's width a bit more flexible */
         #file-upload::file-selector-button {
             background-color: #7e7d80;
             color: white;
@@ -76,6 +85,12 @@
         var heatLayer;
         var coordinates;
 
+        function printCoords() {
+            for (let i = 1; i < 5; i++) {
+                console.log(coordinates[i])
+            }
+        }
+
         document.getElementById('file-upload').addEventListener('change', function (event) {
             var file = event.target.files[0];
             if (!file) return;
@@ -83,10 +98,18 @@
             var reader = new FileReader();
             reader.onload = function (e) {
                 var data = e.target.result;
-                coordinates = parseGPSData(data);
+
+                if (file.name.endsWith('.geojson')) {
+                    coordinates = parseGeoJSONData(data);
+                    printCoords()
+                } else {
+                    coordinates = parseGPSData(data);
+                    printCoords()
+                }
 
                 if (heatLayer) {
                     map.removeLayer(heatLayer);
+
                 }
 
                 heatLayer = L.heatLayer(coordinates, { radius: 15, blur: 30, maxZoom: 10 }).addTo(map);
@@ -111,6 +134,43 @@
             return coordinates;
         }
 
+        function parseGeoJSONData(data) {
+            var coordinates = [];
+            try {
+                var geojson = JSON.parse(data);
+
+                if (geojson.type === 'FeatureCollection') {
+                    geojson.features.forEach(feature => {
+                        if (feature.geometry) {
+                            var geometryType = feature.geometry.type;
+
+                            if (geometryType === 'Point') {
+                                var lat = feature.geometry.coordinates[1];
+                                var lng = feature.geometry.coordinates[0];
+                                coordinates.push([lat, lng]);
+
+                            } else if (geometryType === 'Polygon') {
+                                var polygonCoordinates = feature.geometry.coordinates[0];
+                                polygonCoordinates.forEach(coord => {
+                                    coordinates.push([coord[1], coord[0]]);
+                                });
+
+                            } else if (geometryType === 'MultiPolygon') {
+                                feature.geometry.coordinates.forEach(polygon => {
+                                    polygon[0].forEach(coord => {
+                                        coordinates.push([coord[1], coord[0]]);
+                                    });
+                                });
+                            }
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error parsing GeoJSON:', error);
+            }
+            return coordinates;
+        }
+
 
         // // Function to update heatmap during zoom
         // map.on('zoom', function () {
@@ -130,6 +190,11 @@
 
         //     heatLayer.setLatLngs(coordinates); // Reapply existing points to heatmap layer
         // }
+
+
+
+
     </script>
 </body>
+
 </html>
