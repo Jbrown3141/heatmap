@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Page</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #map-container {
+            width: 90vw;
+            height: 80vh;
+        }
+
+        #file-upload {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map-container"></div>
+    <input type="file" id="file-upload" accept=".gpx,.geojson,.txt" />
+    <script>
+        var map = L.map('map-container').setView([44.31, -69.78], 8);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        var heatLayer;
+        var coordinates;
+
+        document.getElementById('file-upload').addEventListener('change', function (event) {
+            var file = event.target.files[0];
+            if (!file) return;
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var data = e.target.result;
+                //var coordinates = parseGPSData(data);
+                coordinates = parseGPSData(data);
+
+                if (heatLayer) {
+                    map.removeLayer(heatLayer);
+                }
+
+                heatLayer = L.heatLayer(coordinates, { radius: 15, blur: 30, maxZoom: 10 }).addTo(map);
+            };
+
+            reader.readAsText(file);
+        });
+
+        function parseGPSData(data) {
+            var coordinates = [];
+            var lines = data.split('\n');
+            lines.forEach(line => {
+                var parts = line.split(',');
+                if (parts.length >= 2) {
+                    var lat = parseFloat(parts[0].trim());
+                    var lng = parseFloat(parts[1].trim());
+                    if (!isNaN(lat) && !isNaN(lng)) {
+                        coordinates.push([lat, lng]);
+                    }
+                }
+            });
+            return coordinates;
+        }
+
+
+        // // Function to update heatmap during zoom
+        // map.on('zoom', function () {
+        //     // Use requestAnimationFrame for smoother updates during zooming
+        //     requestAnimationFrame(function () {
+        //         updateHeatmapLayer();
+        //     });
+        // });
+
+        // // Function to refresh the heatmap (reapply the same data points)
+        // function updateHeatmapLayer() {
+        //     var zoomLevel = map.getZoom();
+
+        //     // Optionally, you can modify the data based on zoom level if necessary
+        //     // For example, adjust the opacity or density of points based on zoom
+        //     // However, if you don't want to change the data, just reapply the current points
+
+        //     heatLayer.setLatLngs(coordinates); // Reapply existing points to heatmap layer
+        // }
+
+
+
+
+    </script>
+</body>
+
+</html>
