@@ -9,66 +9,40 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
     <style>
-        html, body {
+         * {
             margin: 0;
             padding: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+           html, body {
+            height: 100%;
             display: flex;
             flex-direction: column;
         }
 
         #map-container {
-            width: 100vw;
-            height: 95vh;
+            flex: 85%;
+            width: 100%;
+            background-color: lightgray; /* Placeholder for map */
         }
 
         #file-upload-container {
+            flex: 15%;
+            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 100%;
-            padding: 10px;
-            padding-top: 40px;
-            padding-bottom: 40px;
-            background-color: #e9d38cbd;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        #file-upload {
-            padding: 10px;
-            font-size: 18px;
-            cursor: pointer;
-            width: 100vw;
-            height: 5vh;
-            display: inline-block;
-            text-align: center;
-            border: none;
-            background-color: transparent;
-            color: black;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        #file-upload::file-selector-button {
-            background-color: #7e7d80;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            width: auto;
+            background-color: #f0f0f0;
         }
     </style>
 </head>
-
 <body>
     <div id="map-container"></div>
     <div id="file-upload-container">
         <input type="file" id="file-upload" accept=".gpx,.geojson,.txt" />
     </div>
+
     <script>
         var map = L.map('map-container').setView([44.31, -69.78], 8);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
