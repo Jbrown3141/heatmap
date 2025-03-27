@@ -24,8 +24,6 @@
             width: 100vw;
             height: calc(100vh - 100px);
         }
-
-        /* Wrapper to center the input button */
         #file-upload-wrapper {
             display: flex;
             justify-content: center;
@@ -47,18 +45,11 @@
             display: inline-block;
             text-align: center;
             border: none;
-            /* Removes default border from the input button */
             background-color: transparent;
-            /* Keeps it transparent */
             color: black;
-            /* Set text color */
             text-overflow: ellipsis;
-            /* Adds ellipsis for long filenames */
             white-space: nowrap;
-            /* Prevents text from wrapping */
         }
-
-        /* Optional: Make file input button's width a bit more flexible */
         #file-upload::file-selector-button {
             background-color: #7e7d80;
             color: white;
@@ -92,7 +83,6 @@
             var reader = new FileReader();
             reader.onload = function (e) {
                 var data = e.target.result;
-                //var coordinates = parseGPSData(data);
                 coordinates = parseGPSData(data);
 
                 if (heatLayer) {
@@ -140,11 +130,6 @@
 
         //     heatLayer.setLatLngs(coordinates); // Reapply existing points to heatmap layer
         // }
-
-
-
-
     </script>
 </body>
-
 </html>
