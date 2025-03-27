@@ -15,25 +15,67 @@
             background-color: white;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             height: 100vh;
         }
 
         #map-container {
-            width: 90vw;
-            height: 80vh;
+            width: 100vw;
+            height: calc(100vh - 100px);
+        }
+
+        /* Wrapper to center the input button */
+        #file-upload-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 10px;
+            padding-top: 40px;
+            padding-bottom: 40px;
+            background-color: #e9d38ca1;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
 
         #file-upload {
-            margin-top: 10px;
+            padding: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            width: auto;
+            display: inline-block;
+            text-align: center;
+            border: none;
+            /* Removes default border from the input button */
+            background-color: transparent;
+            /* Keeps it transparent */
+            color: black;
+            /* Set text color */
+            text-overflow: ellipsis;
+            /* Adds ellipsis for long filenames */
+            white-space: nowrap;
+            /* Prevents text from wrapping */
+        }
+
+        /* Optional: Make file input button's width a bit more flexible */
+        #file-upload::file-selector-button {
+            background-color: #7e7d80;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            width: auto;
         }
     </style>
 </head>
 
 <body>
     <div id="map-container"></div>
-    <input type="file" id="file-upload" accept=".gpx,.geojson,.txt" />
+    <div id="file-upload-wrapper">
+        <input type="file" id="file-upload" accept=".gpx,.geojson,.txt" />
+    </div>
     <script>
         var map = L.map('map-container').setView([44.31, -69.78], 8);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
