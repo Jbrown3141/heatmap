@@ -45,19 +45,6 @@ fileInput.addEventListener("change", (event) => {
                 // console.log("Handling .txt/.csv")
                 handleCSV(file);
                 break;
-            case 'application/vnd.ms-excel':
-            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-                // console.log("Handling .xls/.xlsx")
-                handleXLSX(file);
-                break;
-            case 'application/geo+json':
-                // console.log("Handling .geojson")
-                handleGeoJSON(file);
-                break;
-            case 'application/gpx+xml':
-                // console.log("Handling .gpx")
-                handleGPX(file);
-                break;
             default:
                 alert("Unsupported file type.");
                 // console.log("Handling invalid filetype")
@@ -74,41 +61,6 @@ function handleCSV(file) {
         },
         header: false
     });
-}
-
-function handleXLSX(file) {
-    const reader = new FileReader();
-    reader.onload = function (event) {
-        const data = new Uint8Array(event.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-        const zipCodes = json.map(row => row[0]);
-        fetchPolygonsForZipCodes(zipCodes);
-    };
-    reader.readAsArrayBuffer(file);
-}
-
-function handleGeoJSON(file) {
-    const reader = new FileReader();
-    reader.onload = function (event) {
-        const geojson = JSON.parse(event.target.result);
-        const zipCodes = geojson.features.map(feature => feature.properties.zip_code);
-        fetchPolygonsForZipCodes(zipCodes);
-    };
-    reader.readAsText(file);
-}
-
-function handleGPX(file) {
-    const reader = new FileReader();
-    reader.onload = function (event) {
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(event.target.result, "text/xml");
-        const trkpts = xmlDoc.getElementsByTagName("trkpt");
-        const zipCodes = Array.from(trkpts).map(trkpt => trkpt.getAttribute("zip"));
-        fetchPolygonsForZipCodes(zipCodes);
-    };
-    reader.readAsText(file);
 }
 
 function fetchPolygonsForZipCodes(zipCodes) {
@@ -131,10 +83,6 @@ function plotPolygon(polygonData) {
         }).addTo(map);
     });
 }
-
-document.getElementById('generate-coordinates').addEventListener('click', function () {
-    plotPolygon(bangorPoly)
-});
 
 let polygonJsonData = []; // This will be loaded from your JSON file
 
