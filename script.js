@@ -147,7 +147,7 @@ function getPolygonsByZip(zipCode) {
 }
 
 // Load the JSON data once at startup
-fetch("MaineMergedWithZips.json")
+fetch("MaineBorderData.json")
     .then(response => response.json())
     .then(data => {
         polygonJsonData = data;
