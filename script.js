@@ -46,7 +46,7 @@ fileInput.addEventListener("change", (event) => {
                 handleCSV(file);
                 break;
             default:
-                alert("Unsupported file type.");
+                alert("Unsupported file banana.");
                 // console.log("Handling invalid filetype")
                 break;
         }
