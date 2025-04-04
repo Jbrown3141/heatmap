@@ -5,207 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Map Page</title>
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        #map-container {
-            flex: 85%;
-            width: 100%;
-            background-color: lightgray;
-            /* Placeholder for map */
-        }
-
-        #file-upload-container {
-            flex: 15%;
-            width: 100%;
-            display: flex;
-            min-width: 0px;
-            padding: 10px;
-            justify-content: center;
-            align-items: center;
-            background-color: #f0f0f0;
-        }
-
-        #file-upload-container button {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        #file-upload-container button:hover {
-            background-color: #0056b3;
-        }
-    </style>
 </head>
 
 <body>
     <div id="map-container"></div>
+    
     <div id="file-upload-container">
-        <input type="file" id="file-upload" accept=".gpx,.geojson,.txt" />
-        <button id="generate-coordinates">Generate Random Data</button>
+        <input type="file" id="file-upload" accept=".csv,.xls,.xlsx,.gpx,.geojson" />
+        <button id="generate-coordinates">Does nothing rn</button>
     </div>
 
-    <script>
-        var map = L.map('map-container').setView([44.31, -69.78], 8);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-
-        var heatLayer;
-        var coordinates;
-
-        function printCoords() {
-            for (let i = 1; i < 5; i++) {
-                console.log(coordinates[i])
-            }
-        }
-
-        const cities = {
-            'Portland': [43.6591, -70.2568],
-            'Augusta': [44.3106, -69.7795],
-            'Bangor': [44.8012, -68.7778],
-            'Skowhegan': [44.7833, -69.7275],
-            'Camden': [44.2087, -69.0651],
-            'Millinocket': [45.653236,-68.714550],
-            'PresqueIsle': [46.676628, -68.012692]
-        };
-
-        function getRandomInt(min, max) {
-            return Math.floor(Math.random() * (max - min + 1) + min);
-        }
-
-        function getRandomFloat(min, max) {
-            return Math.random() * (max - min) + min;
-        }
-
-        // function generateGpsData(cityCoords, numPoints, spread) {
-        function generateGpsData(cityCoords) {
-            numPoints = getRandomInt(10,100)
-            const [lat, lon] = cityCoords;
-            const gpsData = [];
-            for (let i = 0; i < numPoints; i++) {
-                spread = getRandomFloat(0.0, 0.4)
-                const latOffset = (Math.random() * 2 * spread) - spread;
-                const lonOffset = (Math.random() * 2 * spread) - spread;
-                gpsData.push([lat + latOffset, lon + lonOffset]);
-            }
-            return gpsData;
-        }
-
-        document.getElementById('generate-coordinates').addEventListener('click', function () {
-            gpsData = [];
-            for (const city in cities) {
-                const coords = cities[city];
-                const data = generateGpsData(coords, getRandomInt(40, 140), getRandomFloat(0.0, 0.4));
-                gpsData = gpsData.concat(data);
-            }
-
-            coordinates = gpsData; // Update the coordinates with the generated data
-
-            if (heatLayer) {
-                map.removeLayer(heatLayer);
-            }
-
-            heatLayer = L.heatLayer(coordinates, { radius: 15, blur: 30, maxZoom: 10 }).addTo(map);
-        });
-
-
-        document.getElementById('file-upload').addEventListener('change', function (event) {
-            var file = event.target.files[0];
-            if (!file) return;
-
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                var data = e.target.result;
-
-                if (file.name.endsWith('.geojson')) {
-                    coordinates = parseGeoJSONData(data);
-                    printCoords()
-                } else {
-                    coordinates = parseGPSData(data);
-                    printCoords()
-                }
-
-                if (heatLayer) {
-                    map.removeLayer(heatLayer);
-                }
-
-                heatLayer = L.heatLayer(coordinates, { radius: 15, blur: 30, maxZoom: 10 }).addTo(map);
-            };
-
-            reader.readAsText(file);
-        });
-
-        function parseGPSData(data) {
-            var coordinates = [];
-            var lines = data.split('\n');
-            lines.forEach(line => {
-                var parts = line.split(',');
-                if (parts.length >= 2) {
-                    var lat = parseFloat(parts[0].trim());
-                    var lng = parseFloat(parts[1].trim());
-                    if (!isNaN(lat) && !isNaN(lng)) {
-                        coordinates.push([lat, lng]);
-                    }
-                }
-            });
-            return coordinates;
-        }
-
-        function parseGeoJSONData(data) {
-            var coordinates = [];
-            try {
-                var geojson = JSON.parse(data);
-
-                if (geojson.type === 'FeatureCollection') {
-                    geojson.features.forEach(feature => {
-                        if (feature.geometry) {
-                            var geometryType = feature.geometry.type;
-
-                            if (geometryType === 'Point') {
-                                var lat = feature.geometry.coordinates[1];
-                                var lng = feature.geometry.coordinates[0];
-                                coordinates.push([lat, lng]);
-
-                            } else if (geometryType === 'Polygon') {
-                                var polygonCoordinates = feature.geometry.coordinates[0];
-                                polygonCoordinates.forEach(coord => {
-                                    coordinates.push([coord[1], coord[0]]);
-                                });
-
-                            } else if (geometryType === 'MultiPolygon') {
-                                feature.geometry.coordinates.forEach(polygon => {
-                                    polygon[0].forEach(coord => {
-                                        coordinates.push([coord[1], coord[0]]);
-                                    });
-                                });
-                            }
-                        }
-                    });
-                }
-            } catch (error) {
-                console.error('Error parsing GeoJSON:', error);
-            }
-            return coordinates;
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 
 </html>
