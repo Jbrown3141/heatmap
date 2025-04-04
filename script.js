@@ -95,7 +95,7 @@ function getPolygonsByZip(zipCode) {
 }
 
 // Load the JSON data once at startup
-fetch("MaineBorderData.json")
+fetch("https://github.com/Jbrown3141/heatmap/releases/download/v0.1.0-alpha/MaineBorderData.json")
     .then(response => response.json())
     .then(data => {
         polygonJsonData = data;
