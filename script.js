@@ -76,20 +76,10 @@ function handleCSV(file) {
     });
 }
 
-function handleXLSX(file) {
-    const reader = new FileReader();
-    reader.onload = function (event) {
-        const data = new Uint8Array(event.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]]; // Read the first sheet
-        const json = XLSX.utils.sheet_to_json(sheet, { header: 1 }); // Get data as an array of arrays
-        const zipCodes = json.map(row => row[0]); // Assuming Zip Codes are in the first column
-        fetchPolygonsForZipCodes(zipCodes);
-    };
-    reader.readAsArrayBuffer(file);
-}
+
 
 function fetchPolygonsForZipCodes(zipCodes) {
+    clearPolygons()
     zipCodes.forEach(zipCode => {
         const polygons = getPolygonsByZip(zipCode);  // Get polygons for this zip code
         polygons.forEach(polygon => {
@@ -111,6 +101,11 @@ function plotPolygon(polygonData) {
 }
 
 let polygonJsonData = []; // This will be loaded from your JSON file
+
+function clearPolygons() {
+    polygonJsonData.forEach(p => map.removeLayer(p));
+    polygonJsonData = [];
+}
 
 function getPolygonsByZip(zipCode) {
     // Filter the JSON data for entries with the matching zip code
