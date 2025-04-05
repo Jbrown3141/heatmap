@@ -38,29 +38,31 @@ fileInput.addEventListener("change", (event) => {
         }
 
         console.log("File size valid")
+        handleCSV(file);
 
         // Proceed with file processing (parse content)
-        switch (fileType) {
-            case 'text/csv':
-                console.log("Handling .txt/.csv")
-                handleCSV(file);
-                break;
-            case 'text/plain':
-                console.log("Handling text/plain")
-                handleCSV(file);
-                break;
-            case 'application/vnd.ms-excel':
-                handleCSV(file);
-                break;
-            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-                console.log("Handling excel")
-                handleXLSX(file);
-                break;
-            default:
-                alert("Unsupported file banana: " + fileType);
-                console.log("Handling invalid filetype")
-                break;
-        }
+        // switch (fileType) {
+        //     case 'text/csv':
+        //         console.log("Handling .txt/.csv")
+        //         handleCSV(file);
+        //         break;
+        //     case 'text/plain':
+        //         console.log("Handling text/plain")
+        //         handleCSV(file);
+        //         break;
+        //     case 'application/vnd.ms-excel':
+        //         console.log("Handling excel")
+        //         handleCSV(file);
+        //         break;
+        //     case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+        //         console.log("Handling excel")
+        //         handleXLSX(file);
+        //         break;
+        //     default:
+        //         alert("Unsupported file banana: " + fileType);
+        //         console.log("Handling invalid filetype")
+        //         break;
+        // }
     }
 });
 
