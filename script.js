@@ -93,7 +93,7 @@ function plotPolygon(polygonData) {
     // Loop through the list of polygons and plot each one
     polygonData.forEach(ring => {
         const corrected = ring.map(([lon, lat]) => [lat, lon]);  // Correcting coordinates order
-        L.polygon(corrected, {
+        const polygon = L.polygon(corrected, {
             color: 'blue',
             weight: 3,
             opacity: 0.5
