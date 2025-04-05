@@ -107,7 +107,7 @@ function getPolygonsByZip(zipCode) {
 fetch("MaineBorderData.zip")
   .then(res => res.arrayBuffer())
   .then(JSZip.loadAsync)
-  .then(zip => zip.file("MaineMergedWithZips.json").async("string"))
+  .then(zip => zip.file("MaineBorderData.json").async("string"))
   .then(jsonText => {
     polygonJsonData = JSON.parse(jsonText);
     console.log("Loaded polygons.");
