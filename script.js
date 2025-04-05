@@ -135,5 +135,6 @@ fetch("MaineBorderData.zip")
     .then(jsonText => {
         polygonJsonData = JSON.parse(jsonText);
         console.log("Loaded polygons.");
+        console.log(polygonJsonData[0])
     });
 
