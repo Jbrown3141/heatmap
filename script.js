@@ -95,11 +95,21 @@ function getPolygonsByZip(zipCode) {
 }
 
 // Load the JSON data once at startup
-fetch("https://github.com/Jbrown3141/heatmap/releases/download/v0.1.0-alpha/MaineBorderData.json")
-    .then(response => response.json())
-    .then(data => {
-        polygonJsonData = data;
-    })
-    .catch(error => {
-        console.error('Error loading polygon data:', error);
-    });
+// fetch("https://github.com/Jbrown3141/heatmap/releases/download/v0.1.0-alpha/MaineBorderData.json")
+//     .then(response => response.json())
+//     .then(data => {
+//         polygonJsonData = data;
+//     })
+//     .catch(error => {
+//         console.error('Error loading polygon data:', error);
+//     });
+
+fetch("MaineBorderData.zip")
+  .then(res => res.arrayBuffer())
+  .then(JSZip.loadAsync)
+  .then(zip => zip.file("MaineMergedWithZips.json").async("string"))
+  .then(jsonText => {
+    polygonJsonData = JSON.parse(jsonText);
+    console.log("Loaded polygons.");
+  });
+
