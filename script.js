@@ -76,8 +76,6 @@ function handleCSV(file) {
     });
 }
 
-
-
 function fetchPolygonsForZipCodes(zipCodes) {
     clearPolygons()
     zipCodes.forEach(zipCode => {
@@ -117,16 +115,6 @@ function getPolygonsByZip(zipCode) {
     console.log(matches)
     return matches.flatMap(entry => entry.polygons);  // Flatten the list of polygons
 }
-
-// Load the JSON data once at startup
-// fetch("https://github.com/Jbrown3141/heatmap/releases/download/v0.1.0-alpha/MaineBorderData.json")
-//     .then(response => response.json())
-//     .then(data => {
-//         polygonJsonData = data;
-//     })
-//     .catch(error => {
-//         console.error('Error loading polygon data:', error);
-//     });
 
 fetch("MaineBorderData.zip")
     .then(res => res.arrayBuffer())
