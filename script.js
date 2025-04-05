@@ -88,6 +88,7 @@ function fetchPolygonsForZipCodes(zipCodes) {
     });
 }
 
+let currentPolygons = [];
 function plotPolygon(polygonData) {
     // Loop through the list of polygons and plot each one
     polygonData.forEach(ring => {
@@ -97,14 +98,16 @@ function plotPolygon(polygonData) {
             weight: 3,
             opacity: 0.5
         }).addTo(map);
+
+        currentPolygons.push(polygon);
     });
 }
 
 let polygonJsonData = []; // This will be loaded from your JSON file
 
 function clearPolygons() {
-    polygonJsonData.forEach(p => map.removeLayer(p));
-    polygonJsonData = [];
+    currentPolygons.forEach(p => map.removeLayer(p));
+    currentPolygons = [];
 }
 
 function getPolygonsByZip(zipCode) {
