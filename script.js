@@ -45,12 +45,17 @@ fileInput.addEventListener("change", (event) => {
                 console.log("Handling .txt/.csv")
                 handleCSV(file);
                 break;
-            case 'text/plain': 
-            console.log("Handling text/plain")
+            case 'text/plain':
+                console.log("Handling text/plain")
                 handleCSV(file);
                 break;
+            case 'application/vnd.ms-excel':
+            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                console.log("Handling excel")
+                handleXLSX(file);
+                break;
             default:
-                alert("Unsupported file banana: " + fileType );
+                alert("Unsupported file banana: " + fileType);
                 console.log("Handling invalid filetype")
                 break;
         }
@@ -65,6 +70,19 @@ function handleCSV(file) {
         },
         header: false
     });
+}
+
+function handleXLSX(file) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]]; // Read the first sheet
+        const json = XLSX.utils.sheet_to_json(sheet, { header: 1 }); // Get data as an array of arrays
+        const zipCodes = json.map(row => row[0]); // Assuming Zip Codes are in the first column
+        fetchPolygonsForZipCodes(zipCodes);
+    };
+    reader.readAsArrayBuffer(file);
 }
 
 function fetchPolygonsForZipCodes(zipCodes) {
