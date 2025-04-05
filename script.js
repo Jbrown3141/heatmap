@@ -28,7 +28,7 @@ fileInput.addEventListener("change", (event) => {
             alert("Invalid file type. Please upload a .csv, .xls, .xlsx, .gpx, or .geojson file.");
             return;
         }
-        // console.log("Filetype valid")
+        console.log("Filetype valid")
 
         // Validate file size (e.g., limit to 1MB)
         const maxFileSize = 1 * 1024 * 1024; // 1MB
@@ -42,12 +42,16 @@ fileInput.addEventListener("change", (event) => {
         // Proceed with file processing (parse content)
         switch (fileType) {
             case 'text/csv':
-                // console.log("Handling .txt/.csv")
+                console.log("Handling .txt/.csv")
+                handleCSV(file);
+                break;
+            case 'text/plain': 
+            console.log("Handling text/plain")
                 handleCSV(file);
                 break;
             default:
-                alert("Unsupported file banana.");
-                // console.log("Handling invalid filetype")
+                alert("Unsupported file banana: " + fileType );
+                console.log("Handling invalid filetype")
                 break;
         }
     }
@@ -105,11 +109,11 @@ function getPolygonsByZip(zipCode) {
 //     });
 
 fetch("MaineBorderData.zip")
-  .then(res => res.arrayBuffer())
-  .then(JSZip.loadAsync)
-  .then(zip => zip.file("MaineBorderData.json").async("string"))
-  .then(jsonText => {
-    polygonJsonData = JSON.parse(jsonText);
-    console.log("Loaded polygons.");
-  });
+    .then(res => res.arrayBuffer())
+    .then(JSZip.loadAsync)
+    .then(zip => zip.file("MaineBorderData.json").async("string"))
+    .then(jsonText => {
+        polygonJsonData = JSON.parse(jsonText);
+        console.log("Loaded polygons.");
+    });
 
