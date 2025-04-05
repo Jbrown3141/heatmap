@@ -50,6 +50,8 @@ fileInput.addEventListener("change", (event) => {
                 handleCSV(file);
                 break;
             case 'application/vnd.ms-excel':
+                handleCSV(file);
+                break;
             case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
                 console.log("Handling excel")
                 handleXLSX(file);
