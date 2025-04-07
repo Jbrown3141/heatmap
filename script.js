@@ -70,9 +70,10 @@ fileInput.addEventListener("change", (event) => {
 function handleCSV(file) {
     Papa.parse(file, {
         complete: function (results) {
-            const zipCodes = results.data[0].replace(/\s+/g, '') // Assuming zip codes are in the first row
-            console.log("zips in csv:" + zipCodes)
-            fetchPolygonsForZipCodes(zipCodes);  // Fetch and plot polygons for all zip codes
+            const zipCodes = results.data[0] // Assuming zip codes are in the first row
+            const sanitizedZips = zipCodes.replace(/\s+/g, '')
+            console.log("zips in csv:" + sanitizedZips)
+            fetchPolygonsForZipCodes(sanitizedZips);  // Fetch and plot polygons for all zip codes
         },
         header: false
     });
