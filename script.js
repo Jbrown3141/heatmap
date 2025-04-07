@@ -71,7 +71,7 @@ function handleCSV(file) {
     Papa.parse(file, {
         complete: function (results) {
             const zipCodes = results.data[0] // Assuming zip codes are in the first row
-            console.log(zipCodes)
+            console.log("zips in csv: " + zipCodes)
                 // .map(zip => zip.trim())
                 // .filter(zip => zip.length > 0);  
 
@@ -117,8 +117,7 @@ function getPolygonsByZip(zipCode) {
     // Filter the JSON data for entries with the matching zip code
     const matches = polygonJsonData.filter(entry => entry.zip === zipCode);
     // Return the list of polygons associated with that zip code
-    console.log(matches)
-    return matches.flatMap(entry => entry.polygons);  // Flatten the list of polygons
+    return matches.flatMap(entry => entry.polygons); 
 }
 
 fetch("MaineBorderData.zip")
