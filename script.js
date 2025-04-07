@@ -71,6 +71,7 @@ function handleCSV(file) {
     Papa.parse(file, {
         complete: function (results) {
             const zipCodes = results.data[0]
+            console.log("zipCodes.type:" + zipCodes.type)
             const sanitizedZips = zipCodes.replace(/\s+/g, '')
             console.log("zips in csv:" + sanitizedZips)
             fetchPolygonsForZipCodes(sanitizedZips);
