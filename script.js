@@ -10,8 +10,6 @@ fileInput.addEventListener("change", (event) => {
     const file = event.target.files[0];
 
     if (file) {
-
-        // Validate file type
         const validTypes = [
             'application/vnd.ms-excel', // .xls
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
