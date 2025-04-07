@@ -16,6 +16,7 @@ fileInput.addEventListener("change", (event) => {
             'application/vnd.ms-excel', // .xls
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
             'text/csv', // .csv
+            'text/plain',
             'application/gpx+xml', // .gpx
             'application/geo+json', // .geojson
         ];
