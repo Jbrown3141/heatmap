@@ -72,7 +72,7 @@ function handleCSV(file) {
         complete: function (results) {
             const zipCodes = results.data[0] // Assuming zip codes are in the first row
             const sanitizedZipCodes = zipCodes.replace(/\s+/g, '')
-            console.log("zips in csv: " + sanitizedZipCodes)
+            console.log("zips in csv:" + sanitizedZipCodes)
 
             fetchPolygonsForZipCodes(sanitizedZipCodes);  // Fetch and plot polygons for all zip codes
         },
