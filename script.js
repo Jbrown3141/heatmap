@@ -70,9 +70,9 @@ fileInput.addEventListener("change", (event) => {
 function handleCSV(file) {
     Papa.parse(file, {
         complete: function (results) {
-            const zipCodes = results.data[0] // Assuming zip codes are in the first row
+            const zipCodes = results.data[0].map(zip => zip.trim()) // Assuming zip codes are in the first row
+            
             console.log("zips in csv: " + zipCodes)
-                // .map(zip => zip.trim())
                 // .filter(zip => zip.length > 0);  
 
             fetchPolygonsForZipCodes(zipCodes);  // Fetch and plot polygons for all zip codes
