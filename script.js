@@ -70,10 +70,10 @@ fileInput.addEventListener("change", (event) => {
 function handleCSV(file) {
     Papa.parse(file, {
         complete: function (results) {
-            const zipCodes = results.data[0] // Assuming zip codes are in the first row
+            const zipCodes = results.data[0]
             const sanitizedZips = zipCodes.replace(/\s+/g, '')
             console.log("zips in csv:" + sanitizedZips)
-            fetchPolygonsForZipCodes(sanitizedZips);  // Fetch and plot polygons for all zip codes
+            fetchPolygonsForZipCodes(sanitizedZips);
         },
         header: false
     });
@@ -82,16 +82,15 @@ function handleCSV(file) {
 function fetchPolygonsForZipCodes(zipCodes) {
     clearPolygons()
     zipCodes.forEach(zipCode => {
-        const polygons = getPolygonsByZip(zipCode);  // Get polygons for this zip code
+        const polygons = getPolygonsByZip(zipCode); 
         polygons.forEach(polygon => {
-            plotPolygon(polygon);  // Plot each polygon
+            plotPolygon(polygon); 
         });
     });
 }
 
 let currentPolygons = [];
 function plotPolygon(polygonData) {
-    // Loop through the list of polygons and plot each one
     polygonData.forEach(ring => {
         const corrected = ring.map(([lon, lat]) => [lat, lon]);  // Correcting coordinates order
         const polygon = L.polygon(corrected, {
