@@ -71,11 +71,10 @@ function handleCSV(file) {
     Papa.parse(file, {
         complete: function (results) {
             const zipCodes = results.data[0] // Assuming zip codes are in the first row
-            zipCodes = zipCodes.map(zip => zip.trim())
-            console.log("zips in csv: " + zipCodes)
-                // .filter(zip => zip.length > 0);  
+            const sanitizedZipCodes = zipCodes.map(zip => zip.trim()).filter(zip => zip.length > 0);  
+            console.log("zips in csv: " + sanitizedZipCodes)
 
-            fetchPolygonsForZipCodes(zipCodes);  // Fetch and plot polygons for all zip codes
+            fetchPolygonsForZipCodes(sanitizedZipCodes);  // Fetch and plot polygons for all zip codes
         },
         header: false
     });
