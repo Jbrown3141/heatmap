@@ -24,14 +24,12 @@ fileInput.addEventListener("change", (event) => {
         const fileType = file.type;
         console.log("Filetype:" + fileType)
 
-        // Check if file type is valid or check file extension for .txt
         if (!validTypes.includes(fileType)) {
             alert("Invalid file type. Please upload a .csv, .xls, .xlsx, .gpx, or .geojson file.");
             return;
         }
         console.log("Filetype valid")
 
-        // Validate file size (e.g., limit to 1MB)
         const maxFileSize = 1 * 1024 * 1024; // 1MB
         if (file.size > maxFileSize) {
             alert("File is too large. Please upload a file smaller than 1MB.");
@@ -70,10 +68,11 @@ fileInput.addEventListener("change", (event) => {
 function handleCSV(file) {
     Papa.parse(file, {
         complete: function (results) {
-            const zipCodes = results.data[0]
-            console.log("zipCodes.type:" + zipCodes.type)
-            const sanitizedZips = zipCodes.replace(/\s+/g, '')
-            console.log("zips in csv:" + sanitizedZips)
+            const zipCodes = results.data[0];
+            const sanitizedZips = zipCodes
+            .map(zip => String(zip).replace(/\s+/g, ''))
+            .filter(zip => zip.length > 0);
+            
             fetchPolygonsForZipCodes(sanitizedZips);
         },
         header: false
@@ -104,7 +103,7 @@ function plotPolygon(polygonData) {
     });
 }
 
-let polygonJsonData = []; // This will be loaded from your JSON file
+let polygonJsonData = []; 
 
 function clearPolygons() {
     currentPolygons.forEach(p => map.removeLayer(p));
@@ -112,9 +111,7 @@ function clearPolygons() {
 }
 
 function getPolygonsByZip(zipCode) {
-    // Filter the JSON data for entries with the matching zip code
     const matches = polygonJsonData.filter(entry => entry.zip === zipCode);
-    // Return the list of polygons associated with that zip code
     return matches.flatMap(entry => entry.polygons); 
 }
 
