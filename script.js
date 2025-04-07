@@ -70,8 +70,8 @@ fileInput.addEventListener("change", (event) => {
 function handleCSV(file) {
     Papa.parse(file, {
         complete: function (results) {
-            const zipCodes = results.data[0].map(zip => zip.trim()) // Assuming zip codes are in the first row
-            
+            const zipCodes = results.data[0] // Assuming zip codes are in the first row
+            zipCodes.map(zip => zip.trim())
             console.log("zips in csv: " + zipCodes)
                 // .filter(zip => zip.length > 0);  
 
