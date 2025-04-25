@@ -15,7 +15,6 @@ body {
     flex: 85%;
     width: 100%;
     background-color: lightgray;
-    /* Placeholder for map */
 }
 
 #file-upload-container {
@@ -28,16 +27,3 @@ body {
     align-items: center;
     background-color: #f0f0f0;
 }
-
-/* #file-upload-container button {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-#file-upload-container button:hover {
-    background-color: #0056b3;
-} */
